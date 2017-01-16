@@ -5,10 +5,10 @@ object App {
 
   def main(args: Array[String]): Unit = {
 
-    // introduction
-    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
-    print(input.last.split(" ").foldLeft(0)((a, b) => a.toInt + b.toInt))
-
+    // maximum pairwise product
+    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
+    val ints = input.last.split(" ").map(_.toLong).sorted
+    println(ints.init.last * ints.last)
   }
 
 }
