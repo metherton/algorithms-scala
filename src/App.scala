@@ -7,8 +7,11 @@ object App {
 
   def main(args: Array[String]): Unit = {
 
+    // fibonacci
+    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+
     // maximum pairwise product
-    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
+//    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
 //    val ints = input.last.split(" ").map(_.toLong).sorted
 //    println(ints.init.last * ints.last)
 
@@ -18,22 +21,52 @@ object App {
       case x :: xs => if (x > max) loop(xs, x, max) else if (x > nextMax) loop(xs, max, x) else loop(xs, max, nextMax)
     }
 
-//    val product = loop(input.last.split(" ").map(_.toLong).toList, 0, 0)
-//    println(product)
+//    val mpp = new MaximumPairwiseProduct(input.last.split(" ").map(_.toLong).toList)
+//    println(mpp.solution())
 
-    val mpp = new MaximumPairwiseProduct(input.last.split(" ").map(_.toLong).toList)
-    println(mpp.solution())
+    // fibonaaci
+//    val fibVal = new Fibonacci(input.head.toInt)
+//    println(fibVal.solution())
+
+    // fibonaaci last digit
+    val fibValLastDigit = new FibonacciLastDigit(input.head.toInt)
+    println(fibValLastDigit.solution())
   }
 
 }
 
-class MaximumPairwiseProduct(val listOfLongIntegers: List[Long]) {
-  def solution(): Long = {
-    @tailrec
-    def solution(longs: List[Long], max: Long, nextMax: Long): Long = longs match {
-      case Nil => max * nextMax
-      case x :: xs => if (x > max) solution(xs, x, max) else if (x > nextMax) solution(xs, max, x) else solution(xs, max, nextMax)
+class FibonacciLastDigit(val n: Int) {
+  def solution(): BigInt = {
+    def solution(vals: List[BigInt]): List[BigInt] = vals.size - 1 match {
+      case `n` => vals
+      case _ => solution(vals :+ (vals.init.last + vals.last) % 10)
     }
-    solution(listOfLongIntegers, 0, 0)
+    val fibSeq = if (n <= 1) List[BigInt](0,1) else solution(List(0, 1))
+    fibSeq(n)
   }
+
+}
+
+//class FibonacciLastDigit(val n: Int) {
+//  def solution(): BigInt = {
+//    def solution(vals: List[BigInt]): List[BigInt] = vals.size - 1 match {
+//      case `n` => vals
+//      case _ => solution(vals :+ (vals.init.last + vals.last) % 10)
+//    }
+//    val fibSeq = if (n <= 1) List[BigInt](0,1) else solution(List(0, 1))
+//    fibSeq(n)
+//  }
+//
+//}
+
+class Fibonacci(val n: Int) {
+  def solution(): BigInt = {
+    def solution(vals: List[BigInt]): List[BigInt] = vals.size - 1 match {
+      case `n` => vals
+      case _ => solution(vals :+ (vals.init.last + vals.last))
+    }
+    val fibSeq = if (n <= 1) List[BigInt](0,1) else solution(List(0, 1))
+    fibSeq(n)
+  }
+
 }
