@@ -18,7 +18,13 @@ object stressTest {
 
   val x = "1".toInt
 
-  val myV = Vector(0,1)
-  myV :+ 2
+  val myV = Vector(1,0)
+  2 +: myV
   myV(1)
+
+  15 % 12
+
+  val gcd = new GCD(15, 10)
+  gcd.solution()
+
 }
