@@ -43,11 +43,18 @@ object App {
 //    println(lcm.solution())
 
     // Fib modulo
+//    val ints = input.last.split(" ").map(_.toLong)
+//    val mod = new FibonacciModulo(ints.head.toLong, ints.tail.head)
+//    println(mod.solution())
+
+    // fibonaaci sum
+//    val fibVal = new FibonacciSum(input.head.toLong)
+//    println(fibVal.solution())
+
+    // fibonaaci sum partial
     val ints = input.last.split(" ").map(_.toLong)
-    val mod = new FibonacciModulo(ints.head.toLong, ints.tail.head)
-    println(mod.solution())
-
-
+    val fibVal = new FibonacciSumPartial(ints.head, ints.tail.head)
+    println(fibVal.solution())
 
 //    def fib(x: Int): BigInt = {
 //      @tailrec def fibHelper(x: Int, prev: BigInt = 0, next: BigInt = 1): BigInt = x match {
@@ -104,16 +111,39 @@ class FibonacciLastDigit(val n: Int) {
 //
 //}
 
-class Fibonacci(val n: Int) {
+class Fibonacci(val n: Long) {
   def solution(): BigInt = {
     def solution(vals: Vector[BigInt]): Vector[BigInt] = vals.size - 1 match {
       case `n` => vals
       case _ => solution(vals :+ (vals.init.last + vals.last))
     }
     val fibSeq = if (n <= 1) Vector[BigInt](0,1) else solution(Vector(0, 1))
-    fibSeq(n)
+    fibSeq(n.toInt)
   }
 
+}
+
+class FibonacciSum(val n: Long) {
+  def solution(): Long = {
+    val fibSum = (new Fibonacci((n + 2) % 60)).solution() - 1
+    fibSum.toString().takeRight(1).toInt
+  }
+}
+
+class FibonacciSumPartial(val m: Long, val n: Long) {
+  def solution(): Long = {
+    def loop(begin: Long, end: Long, accum: BigInt): BigInt = {
+      end match {
+        case `begin` => accum
+        case _ => loop(begin, end - 1, accum + (new Fibonacci((end - 1) % 60)).solution())
+      }
+    }
+    val begin = m % 60
+    val end = n % 60
+
+    val s = loop(begin, end, (new Fibonacci(end)).solution())
+    s.toString().takeRight(1).toInt
+  }
 }
 
 class GCD(val a: Long, val b: Long) {
@@ -155,7 +185,6 @@ class FibonacciModulo(val n: Long, val m: Long) {
 
     loop2(remainder - 1, remainder, 0, 1) %  m
 
-    //    println(fibVal.solution())
   }
 
 }
