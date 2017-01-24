@@ -8,7 +8,7 @@ object App {
   def main(args: Array[String]): Unit = {
 
     // fibonacci
-    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+//    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
 
     // maximum pairwise product
 //    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
@@ -51,10 +51,26 @@ object App {
 //    val fibVal = new FibonacciSum(input.head.toLong)
 //    println(fibVal.solution())
 
+    // min coins
+//      val minCoins = new MinCoins(input.head.toInt)
+//      println(minCoins.solution())
+
+    // max loot
+    val firstLine = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+    val firstLineSplit = firstLine.last.split(" ").map(_.toInt)
+    val otherLines = (for {n <- 1 to firstLineSplit.head; line = Console.readLine()} yield line).toList
+//    val valueWeights = otherLines.map(line => line.split(" ").map(a => Map((a.head / a.last).toDouble, (a.head.toInt, a.last.toInt))).sorted)
+//    val valueWeights = otherLines.map(line => line.split(" ").map(a => Map((a.head / a.last).toDouble, (a.head.toInt, a.last.toInt))).sorted)
+    val weights = otherLines.map(line => line.split(" ").toList)
+      .map(v => ((v.head.toDouble / v.last.toDouble), v.head.toInt, v.last.toInt)).sortBy(b => b._1).reverse
+
+    val maxLoot = new MaxLoot(firstLineSplit.last, weights)
+  //  println(maxLoot.solution())
+
     // fibonaaci sum partial
-    val ints = input.last.split(" ").map(_.toLong)
-    val fibVal = new FibonacciSumPartial(ints.head, ints.tail.head)
-    println(fibVal.solution())
+//    val ints = input.last.split(" ").map(_.toLong)
+//    val fibVal = new FibonacciSumPartial(ints.head, ints.tail.head)
+//    println(fibVal.solution())
 
 //    def fib(x: Int): BigInt = {
 //      @tailrec def fibHelper(x: Int, prev: BigInt = 0, next: BigInt = 1): BigInt = x match {
@@ -72,6 +88,22 @@ object App {
 
 
 
+
+}
+
+class MaxLoot(val capacity: Int, val valueWeights: List[(Double, Int, Int)]) {
+  println("capacity: " + capacity)
+  println("value weights" + valueWeights)
+//  def solution(): Int = {
+//
+//    def solution(amount: Int, numberOfCoins: Int): Int = amount match {
+//      case 0 => numberOfCoins
+//      case _ => if (amount >= 10) solution(amount - 10, numberOfCoins + 1)
+//      else if (amount >= 5) solution(amount - 5, numberOfCoins + 1)
+//      else solution(amount - 1, numberOfCoins + 1)
+//    }
+//    solution(capacity, 0)
+//  }
 
 }
 
@@ -119,6 +151,20 @@ class Fibonacci(val n: Long) {
     }
     val fibSeq = if (n <= 1) Vector[BigInt](0,1) else solution(Vector(0, 1))
     fibSeq(n.toInt)
+  }
+
+}
+
+class MinCoins(val n: Int) {
+  def solution(): Int = {
+
+    def solution(amount: Int, numberOfCoins: Int): Int = amount match {
+      case 0 => numberOfCoins
+      case _ => if (amount >= 10) solution(amount - 10, numberOfCoins + 1)
+      else if (amount >= 5) solution(amount - 5, numberOfCoins + 1)
+      else solution(amount - 1, numberOfCoins + 1)
+    }
+    solution(n, 0)
   }
 
 }

@@ -27,4 +27,13 @@ object stressTest {
   val gcd = new GCD(15, 10)
   gcd.solution()
 
+  val minCoins = new MinCoins(25)
+  minCoins.solution()
+
+  val input = List("60 20", "100 50", "100 25")
+  val weights = input.map(line => line.split(" ").toList)
+          .map(v => (v.head.toInt / v.last.toInt, v.head.toInt, v.last.toInt)).sortBy(b => b._1).reverse
+  //  .map(t => Map((t._1.toInt / t._2.toInt) -> (t._1.toInt, t._2.toInt)))
+
+
 }
