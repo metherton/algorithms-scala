@@ -56,16 +56,26 @@ object App {
 //      println(minCoins.solution())
 
     // max loot
-    val firstLine = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
-    val firstLineSplit = firstLine.last.split(" ").map(_.toInt)
-    val otherLines = (for {n <- 1 to firstLineSplit.head; line = Console.readLine()} yield line).toList
-//    val valueWeights = otherLines.map(line => line.split(" ").map(a => Map((a.head / a.last).toDouble, (a.head.toInt, a.last.toInt))).sorted)
-//    val valueWeights = otherLines.map(line => line.split(" ").map(a => Map((a.head / a.last).toDouble, (a.head.toInt, a.last.toInt))).sorted)
-    val weights = otherLines.map(line => line.split(" ").toList)
-      .map(v => ((v.head.toDouble / v.last.toDouble), v.head.toInt, v.last.toInt)).sortBy(b => b._1).reverse
+//    val firstLine = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+//    val firstLineSplit = firstLine.last.split(" ").map(_.toInt)
+//    val otherLines = (for {n <- 1 to firstLineSplit.head; line = Console.readLine()} yield line).toList
+//    val weights = otherLines.map(line => line.split(" ").toList)
+//      .map(v => ((v.head.toDouble / v.last.toDouble), v.head.toInt, v.last.toInt)).sortBy(b => b._1).reverse
+//
+//    val maxLoot = new MaxLoot(firstLineSplit.last, weights)
+//    println(maxLoot.solution())
 
-    val maxLoot = new MaxLoot(firstLineSplit.last, weights)
-  //  println(maxLoot.solution())
+
+    // max dot product
+    val lines = (for {n <- 1 to 3; line = Console.readLine()} yield line).toList
+    val n = lines(0).toInt
+    val valuePerClick = lines(1).split(" ").map(_.toInt).sorted
+    val numberOfClicks = lines(2).split(" ").map(_.toInt).sorted
+    val clickValues = (valuePerClick.zip(numberOfClicks)).toList
+
+    val maxDotProduct = new MaxDotProduct(clickValues)
+    println(maxDotProduct.solution())
+
 
     // fibonaaci sum partial
 //    val ints = input.last.split(" ").map(_.toLong)
@@ -92,18 +102,31 @@ object App {
 }
 
 class MaxLoot(val capacity: Int, val valueWeights: List[(Double, Int, Int)]) {
-  println("capacity: " + capacity)
-  println("value weights" + valueWeights)
-//  def solution(): Int = {
-//
-//    def solution(amount: Int, numberOfCoins: Int): Int = amount match {
-//      case 0 => numberOfCoins
-//      case _ => if (amount >= 10) solution(amount - 10, numberOfCoins + 1)
-//      else if (amount >= 5) solution(amount - 5, numberOfCoins + 1)
-//      else solution(amount - 1, numberOfCoins + 1)
-//    }
-//    solution(capacity, 0)
-//  }
+
+  def solution(): Double = {
+
+    def solution(valueSoFar: Double, weightSoFar: Int, valWeights: List[(Double, Int, Int)]): Double = weightSoFar match {
+      case `capacity` => valueSoFar
+      case _ => valWeights match {
+        case Nil => valueSoFar
+        case x :: xs => if (x._3 + weightSoFar <= capacity) solution(valueSoFar + x._2, weightSoFar + x._3, xs) else solution(valueSoFar + (x._2 * (capacity - weightSoFar).toDouble/x._3), weightSoFar + (capacity - weightSoFar), xs)
+      }
+    }
+    solution(0, 0, valueWeights)
+  }
+
+}
+
+class MaxDotProduct(val clickValues: List[(Int, Int)]) {
+
+  def solution(): Int = {
+
+    def solution(clicks: List[(Int, Int)], accum: Int): Int = clicks match {
+      case Nil => accum
+      case x :: xs => solution(xs, accum + (x._1 * x._2))
+    }
+    solution(clickValues, 0)
+  }
 
 }
 
