@@ -8,7 +8,7 @@ object App {
   def main(args: Array[String]): Unit = {
 
     // fibonacci
-//    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
 
     // maximum pairwise product
 //    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
@@ -77,22 +77,26 @@ object App {
 //    println(maxDotProduct.solution())
 
     // collecting signatures
-    val firstLine = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
-    val numberOfSegments = firstLine.head.toInt
-    val otherLines = (for {n <- 1 to numberOfSegments; line = Console.readLine()} yield line).toList
-    val segments = otherLines.map(line => line.split(" ").toList).map(line => (line(0).toLong, line(1).toLong)).sortBy(e => e._2)
-    val minSegments = new MinSegment(numberOfSegments, segments)
-    val solution = minSegments.solution()
+//    val firstLine = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+//    val numberOfSegments = firstLine.head.toInt
+//    val otherLines = (for {n <- 1 to numberOfSegments; line = Console.readLine()} yield line).toList
+//    val segments = otherLines.map(line => line.split(" ").toList).map(line => (line(0).toLong, line(1).toLong)).sortBy(e => e._2)
+//    val minSegments = new MinSegment(numberOfSegments, segments)
+//    val solution = minSegments.solution()
+//    println(solution.size)
+//    val nums = solution.mkString(" ")
+//    println(nums)
+
+    // maxPairwise
+    //    val fibVal = new Fibonacci(input.head.toInt)
+    //    println(fibVal.solution())
+
+    // maxprizes
+    val maxPrizes = new MaxPrizes(input.head.toInt)
+    val solution = maxPrizes.solution()
     println(solution.size)
     val nums = solution.mkString(" ")
     println(nums)
-
-
-    // fibonaaci sum partial
-//    val ints = input.last.split(" ").map(_.toLong)
-//    val fibVal = new FibonacciSumPartial(ints.head, ints.tail.head)
-//    println(fibVal.solution())
-
 //    def fib(x: Int): BigInt = {
 //      @tailrec def fibHelper(x: Int, prev: BigInt = 0, next: BigInt = 1): BigInt = x match {
 //        case 0 => prev
@@ -107,8 +111,16 @@ object App {
 
   }
 
+}
 
-
+class MaxPrizes(val n: Long) {
+  def solution(): Vector[Long] = {
+    def solution(leftOver: Long, series: Vector[Long], lastKnown: Long): Vector[Long] = leftOver match {
+      case 0 => series
+      case _ => if (leftOver <= 2 * lastKnown) solution(0, series :+ leftOver, lastKnown) else solution(leftOver - lastKnown, series :+ lastKnown, lastKnown + 1)
+    }
+    solution(n, Vector(), 1)
+  }
 
 }
 
