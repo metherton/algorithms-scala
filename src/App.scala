@@ -67,14 +67,25 @@ object App {
 
 
     // max dot product
-    val lines = (for {n <- 1 to 3; line = Console.readLine()} yield line).toList
-    val n = lines(0).toInt
-    val valuePerClick = lines(1).split(" ").map(_.toInt).sorted
-    val numberOfClicks = lines(2).split(" ").map(_.toInt).sorted
-    val clickValues = (valuePerClick.zip(numberOfClicks)).toList
+//    val lines = (for {n <- 1 to 3; line = Console.readLine()} yield line).toList
+//    val n = lines(0).toLong
+//    val valuePerClick = lines(1).split(" ").map(_.toLong).sorted
+//    val numberOfClicks = lines(2).split(" ").map(_.toLong).sorted
+//    val clickValues = (valuePerClick.zip(numberOfClicks)).toList
+//
+//    val maxDotProduct = new MaxDotProduct(n, clickValues)
+//    println(maxDotProduct.solution())
 
-    val maxDotProduct = new MaxDotProduct(clickValues)
-    println(maxDotProduct.solution())
+    // collecting signatures
+    val firstLine = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+    val numberOfSegments = firstLine.head.toInt
+    val otherLines = (for {n <- 1 to numberOfSegments; line = Console.readLine()} yield line).toList
+    val segments = otherLines.map(line => line.split(" ").toList).map(line => (line(0).toLong, line(1).toLong)).sortBy(e => e._2)
+    val minSegments = new MinSegment(numberOfSegments, segments)
+    val solution = minSegments.solution()
+    println(solution.size)
+    val nums = solution.mkString(" ")
+    println(nums)
 
 
     // fibonaaci sum partial
@@ -101,6 +112,22 @@ object App {
 
 }
 
+class MinSegment(val numberOfSegments: Int, val segments: List[(Long, Long)]) {
+
+
+
+  def solution(): List[Long] = {
+
+    def solution(segs: List[(Long, Long)], accum: List[Long], minRight: Long): List[Long] = segs match {
+      case Nil => accum
+      case x :: xs => if (x._1 <= minRight) solution(xs, accum, minRight) else solution(xs, accum :+ x._2, x._2)
+    }
+    solution(segments, List(), -1)
+  }
+
+}
+
+
 class MaxLoot(val capacity: Int, val valueWeights: List[(Double, Int, Int)]) {
 
   def solution(): Double = {
@@ -117,11 +144,11 @@ class MaxLoot(val capacity: Int, val valueWeights: List[(Double, Int, Int)]) {
 
 }
 
-class MaxDotProduct(val clickValues: List[(Int, Int)]) {
+class MaxDotProduct(val numberOfValues: Long, val clickValues: List[(Long, Long)]) {
 
-  def solution(): Int = {
+  def solution(): Long = {
 
-    def solution(clicks: List[(Int, Int)], accum: Int): Int = clicks match {
+    def solution(clicks: List[(Long, Long)], accum: Long): Long = clicks match {
       case Nil => accum
       case x :: xs => solution(xs, accum + (x._1 * x._2))
     }
