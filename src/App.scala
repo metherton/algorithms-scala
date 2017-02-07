@@ -1,4 +1,5 @@
 import scala.annotation.tailrec
+import scala.collection.immutable.Stream.Empty
 
 /**
   * Created by martin on 18/10/16.
@@ -8,11 +9,14 @@ object App {
   def main(args: Array[String]): Unit = {
 
     // fibonacci
-    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
+//    val input = (for {n <- 1 to 1; line = Console.readLine()} yield line).toList
 
     // maximum pairwise product
-//    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
-//    val ints = input.last.split(" ").map(_.toLong).sorted
+ //   val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
+ //   def sortNumbers(first: String, second: String): Boolean = (first.split("").toList, second.split("").toList).zipped.forall((x, y) => x >= y)
+
+//    val ints = input.last.split(" ").toList.sortWith((first, second) => if (first.size < second.size) first.padTo(second.size, first(first.size - 1)) > second else if (second.size < first.size) second.padTo(first.size, second(second.size - 1)) < first   else first > second)
+ //   val ints = input.last.split(" ").toList.sortWith((first, second) => first + second > second + first)
 //    println(ints.init.last * ints.last)
 
     @tailrec
@@ -26,7 +30,8 @@ object App {
 
     // fibonaaci
 //    val fibVal = new Fibonacci(input.head.toInt)
-//    println(fibVal.solution())
+//    val fibVal = new Fibonacci(input.head.toInt)
+ //   println(fibVal.solution())
 
     // fibonaaci last digit
 //    val fibValLastDigit = new FibonacciLastDigit(input.head.toInt)
@@ -92,11 +97,11 @@ object App {
     //    println(fibVal.solution())
 
     // maxprizes
-    val maxPrizes = new MaxPrizes(input.head.toInt)
-    val solution = maxPrizes.solution()
-    println(solution.size)
-    val nums = solution.mkString(" ")
-    println(nums)
+//    val maxPrizes = new MaxPrizes(input.head.toInt)
+//    val solution = maxPrizes.solution()
+//    println(solution.size)
+//    val nums = solution.mkString(" ")
+//    println(nums)
 //    def fib(x: Int): BigInt = {
 //      @tailrec def fibHelper(x: Int, prev: BigInt = 0, next: BigInt = 1): BigInt = x match {
 //        case 0 => prev
@@ -108,8 +113,70 @@ object App {
 //
 //    println(fib(input.head.toInt))
 
+      // maxPairwise
+//      val maxSalary = new MaxSalary(input.head.toLong, ints: List[String])
+  //    println(maxSalary.solution())
+
+    //Binary search
+    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
+    val firstLine = input.head
+    val secondLine = input.last
+    val n = firstLine.split(" ").toList.head.toLong
+    val sortedNumbers = firstLine.split(" ").toVector.tail.map(_.toLong)
+    val k = secondLine.split(" ").toList.head.toLong
+    val unsortedNumbers = secondLine.split(" ").toVector.tail.map(_.toLong)
+    new BinarySearch(n, sortedNumbers, k, unsortedNumbers)
+
+
 
   }
+
+}
+
+class BinarySearch(val n: Long, val sortedNumbers: Vector[Long], val k: Long, unsortedNumbers: Vector[Long]) {
+ // println("n:" + n + " sortedNumbers:" + sortedNumbers + " k: " + k + " unsortedNumebr:" + unsortedNumbers)
+
+  def loop(k: Long, low: Long, high: Long): Long = {
+    if (high < low) return -1
+    val mid = Math.abs(low + (high - low)/2)
+    if (k == sortedNumbers(mid.toInt)) return mid
+    else if (k < sortedNumbers(mid.toInt)) return loop(k, low, mid - 1)
+    else return loop(k, mid + 1, high)
+  }
+
+
+  val result = for {
+    numberToFind <- unsortedNumbers
+    position = loop(numberToFind, 0, sortedNumbers.size - 1)
+  } yield position
+
+  println(result.mkString(" "))
+}
+
+class MaxSalary(val n: Long, val numbers: List[String]) {
+
+  println(numbers.mkString(""))
+
+//  def isGreaterOrEqual(first: String, second: String): Boolean = first.toString >= second.toString
+//
+//  def solution(): Vector[Long] = {
+//     def solution(numsSoFar: Vector[Long], accum: Vector[Long]): Vector[Long] = numsSoFar match {
+//       case IndexedSeq() => accum
+//
+//     }
+//     solution(numbers, Vector())
+//
+//
+//  }
+
+
+//  def solution(): Vector[Long] = {
+//    def solution(leftOver: Long, series: Vector[Long], lastKnown: Long): Vector[Long] = leftOver match {
+//      case 0 => series
+//      case _ => if (leftOver <= 2 * lastKnown) solution(0, series :+ leftOver, lastKnown) else solution(leftOver - lastKnown, series :+ lastKnown, lastKnown + 1)
+//    }
+//    solution(n, Vector(), 1)
+//  }
 
 }
 
@@ -206,16 +273,32 @@ class FibonacciLastDigit(val n: Int) {
 //}
 
 class Fibonacci(val n: Long) {
-  def solution(): BigInt = {
-    def solution(vals: Vector[BigInt]): Vector[BigInt] = vals.size - 1 match {
-      case `n` => vals
-      case _ => solution(vals :+ (vals.init.last + vals.last))
-    }
-    val fibSeq = if (n <= 1) Vector[BigInt](0,1) else solution(Vector(0, 1))
-    fibSeq(n.toInt)
+
+  def loop(currentIndex: Long, last: Long, lastButOne: Long): Long = currentIndex match {
+    case `n`  => last + lastButOne
+    case _ => loop(currentIndex + 1, last + lastButOne, last)
+  }
+
+  if (n == 0) println(1)
+  else if (n == 1) println(1)
+  else {
+    val result = loop(2, 1, 0)
+    println(result)
   }
 
 }
+
+//class Fibonacci(val n: Long) {
+//  def solution(): BigInt = {
+//    def solution(vals: Vector[BigInt]): Vector[BigInt] = vals.size - 1 match {
+//      case `n` => vals
+//      case _ => solution(vals :+ (vals.init.last + vals.last))
+//    }
+//    val fibSeq = if (n <= 1) Vector[BigInt](0,1) else solution(Vector(0, 1))
+//    fibSeq(n.toInt)
+//  }
+//
+//}
 
 class MinCoins(val n: Int) {
   def solution(): Int = {
@@ -231,28 +314,28 @@ class MinCoins(val n: Int) {
 
 }
 
-class FibonacciSum(val n: Long) {
-  def solution(): Long = {
-    val fibSum = (new Fibonacci((n + 2) % 60)).solution() - 1
-    fibSum.toString().takeRight(1).toInt
-  }
-}
+//class FibonacciSum(val n: Long) {
+//  def solution(): Long = {
+//    val fibSum = (new Fibonacci((n + 2) % 60)).solution() - 1
+//    fibSum.toString().takeRight(1).toInt
+//  }
+//}
 
-class FibonacciSumPartial(val m: Long, val n: Long) {
-  def solution(): Long = {
-    def loop(begin: Long, end: Long, accum: BigInt): BigInt = {
-      end match {
-        case `begin` => accum
-        case _ => loop(begin, end - 1, accum + (new Fibonacci((end - 1) % 60)).solution())
-      }
-    }
-    val begin = m % 60
-    val end = n % 60
-
-    val s = loop(begin, end, (new Fibonacci(end)).solution())
-    s.toString().takeRight(1).toInt
-  }
-}
+//class FibonacciSumPartial(val m: Long, val n: Long) {
+//  def solution(): Long = {
+//    def loop(begin: Long, end: Long, accum: BigInt): BigInt = {
+//      end match {
+//        case `begin` => accum
+//        case _ => loop(begin, end - 1, accum + (new Fibonacci((end - 1) % 60)).solution())
+//      }
+//    }
+//    val begin = m % 60
+//    val end = n % 60
+//
+//    val s = loop(begin, end, (new Fibonacci(end)).solution())
+//    s.toString().takeRight(1).toInt
+//  }
+//}
 
 class GCD(val a: Long, val b: Long) {
   def solution(): Long = {
