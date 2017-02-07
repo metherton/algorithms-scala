@@ -118,18 +118,72 @@ object App {
   //    println(maxSalary.solution())
 
     //Binary search
+//    val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
+//    val firstLine = input.head
+//    val secondLine = input.last
+//    val n = firstLine.split(" ").toList.head.toLong
+//    val sortedNumbers = firstLine.split(" ").toVector.tail.map(_.toLong)
+//    val k = secondLine.split(" ").toList.head.toLong
+//    val unsortedNumbers = secondLine.split(" ").toVector.tail.map(_.toLong)
+//    new BinarySearch(n, sortedNumbers, k, unsortedNumbers)
+
+    //Majority element
     val input = (for {n <- 1 to 2; line = Console.readLine()} yield line).toList
     val firstLine = input.head
     val secondLine = input.last
-    val n = firstLine.split(" ").toList.head.toLong
-    val sortedNumbers = firstLine.split(" ").toVector.tail.map(_.toLong)
-    val k = secondLine.split(" ").toList.head.toLong
-    val unsortedNumbers = secondLine.split(" ").toVector.tail.map(_.toLong)
-    new BinarySearch(n, sortedNumbers, k, unsortedNumbers)
-
-
+    val n = firstLine.toInt
+    val numbersToCheck = secondLine.split(" ").toVector.map(_.toInt)
+    new MajorityElement(n, numbersToCheck)
 
   }
+
+}
+
+class MajorityElement(n: Int, val numbersToCheck: Vector[Int]) {
+  def loop(numbersToCheck: Vector[Int], left: Int, right: Int): Int = {
+    if (left == right) return -1
+    if (left + 1 == right) return numbersToCheck(left)
+    val majorityNumber = Math.floor((right - left) / 2)
+    val mid = Math.floor(left + ((right - left) / 2)).toInt
+    val leftSide: Int = loop(numbersToCheck, left, mid)
+    val rightSide: Int = loop(numbersToCheck, mid, right)
+    var leftCount = 0
+    var rightCount = 0
+
+
+    if (leftSide == -1 && rightSide != -1) {
+      for (i <- left to right - 1) {
+        if (numbersToCheck(i) == rightSide) {
+          rightCount += 1
+        }
+      }
+      if (rightCount > majorityNumber) return rightSide
+      else return -1
+    }
+    else if (rightSide == -1 && leftSide != -1) {
+      for (i <- left to right - 1) {
+        if (numbersToCheck(i) == leftSide) leftCount +=1
+      }
+      if (leftCount > majorityNumber) return leftSide
+      else return -1
+    }
+    else if (leftSide != -1 && rightSide != -1) {
+      for (i <- left to right - 1) {
+        if (numbersToCheck(i) == leftSide) leftCount += 1
+      }
+      for (i <- left to right - 1) {
+        if (numbersToCheck(i) == rightSide) rightCount += 1
+      }
+      if (leftCount > majorityNumber) return leftSide
+      else if (rightCount > majorityNumber) return rightSide
+      else return -1
+    }
+    return -1
+
+  }
+
+  if (loop(numbersToCheck, 0, numbersToCheck.length) != -1) println(1) else println(0)
+
 
 }
 
