@@ -143,13 +143,13 @@ class MajorityElement(n: Int, val numbersToCheck: Vector[Int]) {
   def loop(numbersToCheck: Vector[Int], left: Int, right: Int): Int = {
     if (left == right) return -1
     if (left + 1 == right) return numbersToCheck(left)
-    val majorityNumber = Math.floor((right - left) / 2)
     val mid = Math.floor(left + ((right - left) / 2)).toInt
     val leftSide: Int = loop(numbersToCheck, left, mid)
     val rightSide: Int = loop(numbersToCheck, mid, right)
     var leftCount = 0
     var rightCount = 0
 
+    val majorityNumber = Math.floor((right - left) / 2)
 
     if (leftSide == -1 && rightSide != -1) {
       for (i <- left to right - 1) {
@@ -174,7 +174,6 @@ class MajorityElement(n: Int, val numbersToCheck: Vector[Int]) {
       }
       if (leftCount > majorityNumber) return leftSide
       else if (rightCount > majorityNumber) return rightSide
-      else return -1
     }
     return -1
 
