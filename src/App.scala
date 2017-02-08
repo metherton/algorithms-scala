@@ -170,8 +170,6 @@ class MajorityElement(n: Int, val numbersToCheck: Vector[Int]) {
     else if (leftSide != -1 && rightSide != -1) {
       for (i <- left to right - 1) {
         if (numbersToCheck(i) == leftSide) leftCount += 1
-      }
-      for (i <- left to right - 1) {
         if (numbersToCheck(i) == rightSide) rightCount += 1
       }
       if (leftCount > majorityNumber) return leftSide
