@@ -148,8 +148,8 @@ object App {
 
 }
 
-class RandomizedQuickSort(val n: Int, val numbersToCheck: Array[Int]) {
-  var A = numbersToCheck
+class RandomizedQuickSort(val n: Int, val A: Array[Int]) {
+ // var A = numbersToCheck
 
   def partition3(a: Array[Int], l: Int, r: Int): (Int,Int) = {
     val x = a(l)
@@ -164,7 +164,8 @@ class RandomizedQuickSort(val n: Int, val numbersToCheck: Array[Int]) {
     }
     var m2 = l
     for (i <- l + 1 to m1) {
-      if (a(i) <= x) {
+      // here is where the magic happens
+      if (a(i) < x) {
         m2 += 1
         val t = a(i)
         a(i) = a(m2)
@@ -184,7 +185,8 @@ class RandomizedQuickSort(val n: Int, val numbersToCheck: Array[Int]) {
     val tmp = a(k)
     a(k) = a(l)
     a(l) = tmp
-    val m = partition3(a, l, r)
+    val b = a
+    val m = partition3(b, l, r)
     randomizedQuickSort(a, l, m._1 - 1)
     randomizedQuickSort(a, m._2 + 1, r)
   }
