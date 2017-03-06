@@ -149,118 +149,59 @@ object App {
 }
 
 class RandomizedQuickSort(val n: Int, val numbersToCheck: Array[Int]) {
- //   if (!List(5,10).exists(x => x == numbersToCheck.length)) {
- //     println(numbersToCheck.mkString(" "))
- //   } else {
+  var A = numbersToCheck
 
-      var A = numbersToCheck
-      // println("n:" + n + " numbersToCheck:" + A)
-//      def partition2(a: Array[Long], l: Long, r: Int): Int = {
-//        val x = a(l)
-//        var j = l
-//        for (i <- l + 1 to r) {
-//          if (a(i) <= x) {
-//            j += 1
-//            val t = a(i)
-//            a(i) = a(j)
-//            a(j) = t
-//          }
-//        }
-//        val t = a(l)
-//        a(l) = a(j)
-//        a(j) = t
-//        j
-//      }
-
-//  def partition3(a: Array[Int], l: Int, r: Int): (Int,Int) = {
-//    val x = a(l)
-//    var m1 = l
-//    var m2 = r
-//
-//    for (i <- l to r) {
-//      if (a(i) < x) {
-//        val t = a(i)
-//        a(i) = a(m1)
-//        a(m1) = t
-//        m1 += 1
-//      } else if (a(i) > x) {
-//        val t = a(i)
-//        a(i) = a(m2)
-//        a(m2) = t
-//        m2 -= 1
-//      }
-//    }
-//    (m1,m2)
-//
-//  }
-
-      def partition3(a: Array[Int], l: Int, r: Int): (Int,Int) = {
-        val x = a(l)
-        var m1 = l
-        for (i <- l + 1 to r) {
-          if (a(i) <= x) {
-            m1 += 1
-            val t = a(i)
-            a(i) = a(m1)
-            a(m1) = t
-          }
-        }
-        var m2 = l
-        for (i <- l + 1 to m1) {
-          if (a(i) <= x) {
-            m2 += 1
-            val t = a(i)
-            a(i) = a(m2)
-            a(m2) = t
-          }
-        }
-        val t = a(l)
-        a(l) = a(m2)
-        a(m2) = t
-        (m2,m1)
-
+  def partition3(a: Array[Int], l: Int, r: Int): (Int,Int) = {
+    val x = a(l)
+    var m1 = l
+    for (i <- l + 1 to r) {
+      if (a(i) <= x) {
+        m1 += 1
+        val t = a(i)
+        a(i) = a(m1)
+        a(m1) = t
       }
-
-//      def loop1(a: Array[Int], l: Int, r: Int): Unit = {
-//        if (l >= r) return
-////        val k = l + Random.nextInt((r - l) + 1)
-//        val k = 0
-//
-//        val tmp = a(k)
-//        a(k) = a(l)
-//        a(l) = tmp
-//        val m = partition2(a, l, r)
-//        loop(a, l, m - 1)
-//        loop(a, m + 1, r)
-//      }
-
-    def randomizedQuickSort(a: Array[Int], l: Int, r: Int): Unit = {
-      if (l >= r) return
-      // val k = l + Random.nextInt((r - l) + 1)
-      val k = l + Random.nextInt(r - l + 1)
-      val tmp = a(k)
-      a(k) = a(l)
-      a(l) = tmp
-      val m = partition3(a, l, r)
-      randomizedQuickSort(a, l, m._1 - 1)
-      randomizedQuickSort(a, m._2 + 1, r)
     }
-
-
-      randomizedQuickSort(A, 0, A.length - 1)
-
-      for (i <- 0 to A.length - 1) {
-        if (i > 0) {
-          if (A(i) < A(i - 1)) {
-            println("There is an error")
-            println(A.mkString(" "))
-            System.exit(1)
-          }
-        }
+    var m2 = l
+    for (i <- l + 1 to m1) {
+      if (a(i) <= x) {
+        m2 += 1
+        val t = a(i)
+        a(i) = a(m2)
+        a(m2) = t
       }
+    }
+    val t = a(l)
+    a(l) = a(m2)
+    a(m2) = t
+    (m2,m1)
 
-      println(A.mkString(" "))
- //   }
+  }
+
+  def randomizedQuickSort(a: Array[Int], l: Int, r: Int): Unit = {
+    if (l >= r) return
+    val k = l + Random.nextInt(r - l + 1)
+    val tmp = a(k)
+    a(k) = a(l)
+    a(l) = tmp
+    val m = partition3(a, l, r)
+    randomizedQuickSort(a, l, m._1 - 1)
+    randomizedQuickSort(a, m._2 + 1, r)
+  }
+
+  randomizedQuickSort(A, 0, A.length - 1)
+
+  for (i <- 0 to A.length - 1) {
+    if (i > 0) {
+      if (A(i) < A(i - 1)) {
+        println("There is an error")
+        println(A.mkString(" "))
+        System.exit(1)
+      }
+    }
+  }
+
+  println(A.mkString(" "))
 }
 
 class MajorityElement(n: Int, val numbersToCheck: Vector[Int]) {
