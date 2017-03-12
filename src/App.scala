@@ -141,10 +141,143 @@ object App {
     val firstLine = input.head
     val secondLine = input.last
     val n = firstLine.toInt
-    val numbersToCheck = secondLine.split(" ").map(_.toInt)
-    new RandomizedQuickSort(n, numbersToCheck)
+    val numbersToCheck = secondLine.split(" ").toVector.map(_.toInt)
+//    val numbersToCheck = secondLine.split(" ").map(_.toInt)
+    new Inversions(n, numbersToCheck)
 
   }
+
+}
+
+class Inversions(val n: Int, val a: Vector[Int]) {
+//class Inversions(val n: Int, val a: Array[Int]) {
+
+//  def merge(left: (Vector[Int], Int), right: (Vector[Int], Int)): (Vector[Int], Int) = {
+//    println("merge:" + left + "with:" + right)
+//    (left._1, right._1) match {
+//      case (left._1, Vector()) => left
+//      case (Vector(), right._1) => right
+//      case (leftHead +: leftTail , rightHead +: rightTail) =>
+//        if (leftHead < rightHead) merge((leftTail, left._2), right) else merge(left, (rightTail, right._2 + 1))
+//    }
+//
+//
+//  }
+//
+//  def mergeSort(list: (Vector[Int], Int)): (Vector[Int], Int) = {
+//    println("Mergesort:" + list)
+//    if (list._1.length == 1) return list
+//    val mid: Integer = list._1.length / 2
+//    val (left, right) = list._1.splitAt(mid)
+//    merge(mergeSort((left, list._2)), mergeSort((right, list._2)))
+//  }
+
+  var numberOfIterations = 0
+
+//  def merge(left: Array[Int], right: Array[Int]): Array[Int] = {
+//    println("merge:" + left + "with:" + right)
+//    (left, right) match {
+//      case (left, Array()) => left
+//      case (Array(), right) => right
+//      case (leftHead +: leftTail , rightHead +: rightTail) =>
+//        if (leftHead <= rightHead) leftHead +: merge(leftTail, right)
+//        else {
+//          println("increment iterator")
+//          numberOfIterations = numberOfIterations + 1
+//          rightHead +: merge(left, rightTail)
+//        }
+//    }
+//
+//
+//  }
+//
+//  def mergeSort(list: Array[Int]): Array[Int] = {
+//    println("Mergesort:" + list)
+//    if (list.length == 1) return list
+//    val mid: Integer = list.length / 2
+//    val (left, right) = list.splitAt(mid)
+//    merge(mergeSort(left), mergeSort(right))
+//  }
+
+  def merge(left: Vector[Int], right: Vector[Int]): Vector[Int] = {
+  //  println("+++++++++++++++++merge:" + left + "with:" + right)
+    (left, right) match {
+      case (left, Vector()) => left
+      case (Vector(), right) => right
+      case (leftHead +: leftTail , rightHead +: rightTail) =>
+        if (leftHead <= rightHead) leftHead +: merge(leftTail, right)
+        else {
+          numberOfIterations = numberOfIterations + 1
+          // check the rest of the tail
+          leftTail.foreach(i => rightTail.foreach(j => if (i > j) numberOfIterations = numberOfIterations + 1))
+
+          rightHead +: merge(left, rightTail)
+        }
+    }
+
+
+  }
+
+  def mergeSort(list: Vector[Int]): Vector[Int] = {
+//    println("Mergesort:" + list)
+    if (list.length == 1) return list
+    val mid: Integer = list.length / 2
+    val (left, right) = list.splitAt(mid)
+    merge(mergeSort(left), mergeSort(right))
+  }
+
+//  def merge(left: Vector[Int], right: Vector[Int]): Vector[Int] = {
+//    println("merge:" + left + "with:" + right)
+//    (left, right) match {
+//      case (left, Vector()) => left
+//      case (Vector(), right) => right
+//      case (leftHead +: leftTail , rightHead +: rightTail) =>
+//        if (leftHead <= rightHead) leftHead +: merge(leftTail, right)
+//        else {
+//          println("increment iterator")
+//          numberOfIterations = numberOfIterations + 1
+//          rightHead +: merge(left, rightTail)
+//        }
+//    }
+//
+//
+//  }
+//
+//  def mergeSort(list: Vector[Int]): Vector[Int] = {
+//    println("Mergesort:" + list)
+//    if (list.length == 1) return list
+//    val mid: Integer = list.length / 2
+//    val (left, right) = list.splitAt(mid)
+//    merge(mergeSort(left), mergeSort(right))
+//  }
+
+
+  def getNumberOfInversions(a: Vector[Int], b: Vector[Int], left: Int, right: Int): Int = {
+    var numberOfInversions = 0
+    if (right <= left + 1) return numberOfInversions
+    val ave = (left + right) / 2
+    numberOfInversions += getNumberOfInversions(a, b, left, ave)
+    numberOfInversions += getNumberOfInversions(a, b, right, ave)
+    return numberOfInversions
+  }
+
+
+
+//  def getNumberOfInversions(a: Array[Int], b: Array[Int], left: Int, right: Int): Int = {
+//    var numberOfInversions = 0
+//    if (right <= left + 1) return numberOfInversions
+//    val ave = (left + right) / 2
+//    numberOfInversions += getNumberOfInversions(a, b, left, ave)
+//    numberOfInversions += getNumberOfInversions(a, b, right, ave)
+//    return numberOfInversions
+//  }
+
+  //println("number of inversions is  " + (mergeSort(a, 0))._2)
+ // println(mergeSort(a))
+  mergeSort(a)
+  println(numberOfIterations)
+
+//  println(getNumberOfInversions(a, Array.ofDim[Int](n), 0, a.length))
 
 }
 
